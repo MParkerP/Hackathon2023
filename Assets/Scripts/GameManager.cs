@@ -7,6 +7,7 @@ using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
+using TMPro;
 
 public class GameManager : MonoBehaviour
 {
@@ -16,6 +17,8 @@ public class GameManager : MonoBehaviour
     public string d;
     public string e = "=";
     public bool isCorrect;
+
+
 
     public Vector3[] spawnPositions = { new Vector3(-4, 2, 0), new Vector3(-2, 3.5f, 0), new Vector3(0, 2, 0), new Vector3(2, 3.5f, 0), new Vector3(4, 2, 0) };
     public int[] randomArray;
@@ -30,6 +33,9 @@ public class GameManager : MonoBehaviour
     public GameObject pauseMenu;
 
     public int[] equationInts;
+
+    public TextMeshProUGUI correctText;
+
 
     private void Awake()
     {
@@ -162,6 +168,15 @@ public class GameManager : MonoBehaviour
             {
                 pauseMenu.SetActive(true);
             }
+        }
+
+        if (isCorrect)
+        {
+            correctText.text = "CORRECT";
+        }
+        else
+        {
+            correctText.text = "INCORRECT";
         }
 
         if (Input.GetKeyDown(KeyCode.R) && isCorrect)

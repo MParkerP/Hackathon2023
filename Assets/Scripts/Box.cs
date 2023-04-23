@@ -140,10 +140,15 @@ public class Box : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.R))
         {
-            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+            
             leftSnapping = false;
             rightSnapping = false;
             transform.position = position;
+
+            if (gameManager.isCorrect)
+            {
+                SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+            }
 
             //if (gameManager.isCorrect)
 /*            {
