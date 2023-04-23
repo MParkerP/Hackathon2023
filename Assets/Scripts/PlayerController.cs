@@ -23,8 +23,6 @@ public class PlayerController : MonoBehaviour
 
 
 
-
-
     void Start()
     {
         playerRb = GetComponent<Rigidbody2D>();

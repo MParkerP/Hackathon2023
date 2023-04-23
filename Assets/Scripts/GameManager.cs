@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
+using MathBuds;
 using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
@@ -9,11 +10,12 @@ using UnityEngine.UIElements;
 
 public class GameManager : MonoBehaviour
 {
-    public int a = 5;
-    public int b = 5;
-    public int c = 10;
-    public string d = "-";
+    public int a;
+    public int b;
+    public int c;
+    public string d;
     public string e = "=";
+    public bool isCorrect;
 
     public Vector3[] spawnPositions = { new Vector3(-4, 2, 0), new Vector3(-2, 3.5f, 0), new Vector3(0, 2, 0), new Vector3(2, 3.5f, 0), new Vector3(4, 2, 0) };
     public int[] randomArray;
@@ -25,8 +27,36 @@ public class GameManager : MonoBehaviour
     public float block2x;
     public float block3x;
     public float block4x;
+    public GameObject pauseMenu;
 
+    public int[] equationInts;
 
+    private void Awake()
+    {
+        equationInts = ExpandedMath.generation(1);
+        a = equationInts[0];
+        b = equationInts[2];
+        c = ExpandedMath.findSolution(equationInts);
+        switch (equationInts[1])
+        {
+            case 1:
+                d = "*";
+                break;
+
+            case 2:
+                d = "/";
+                break;
+
+            case 3:
+                d = "+";
+                break;
+
+            case 4:
+                d = "-";
+                break;
+        }
+
+    }
     private void Start()
     {
         randomArray = new int[5] { 0, 1, 2, 3, 4 };
@@ -118,7 +148,48 @@ public class GameManager : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.J) && allSnapping()) 
         {
-            Debug.Log(checkCorrect());
+            isCorrect = checkCorrect();
+            Debug.Log(isCorrect);
+        }
+
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            if (pauseMenu.activeSelf)
+            {
+                pauseMenu.SetActive(false);
+            }
+            else
+            {
+                pauseMenu.SetActive(true);
+            }
+        }
+
+        if (Input.GetKeyDown(KeyCode.R) && isCorrect)
+        {
+            /*Debug.Log("Regenerating");
+            equationInts = ExpandedMath.generation(1);
+            a = equationInts[0];
+            b = equationInts[2];
+            c = ExpandedMath.findSolution(equationInts);
+            switch (equationInts[1])
+            {
+                case 1:
+                    d = "*";
+                    break;
+
+                case 2:
+                    d = "/";
+                    break;
+
+                case 3:
+                    d = "+";
+                    break;
+
+                case 4:
+                    d = "-";
+                    break;
+            }*/
+
         }
     }
 
@@ -210,5 +281,4 @@ public class GameManager : MonoBehaviour
         return false;
 
     }
-
 }

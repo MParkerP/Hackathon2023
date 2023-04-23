@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 using TMPro;
+using MathBuds;
+using UnityEngine.SceneManagement;
 
 public class Box : MonoBehaviour
 {
@@ -134,6 +136,75 @@ public class Box : MonoBehaviour
         else
         {
             snapping = false;
+        }
+
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+            leftSnapping = false;
+            rightSnapping = false;
+            transform.position = position;
+
+            //if (gameManager.isCorrect)
+/*            {
+                Debug.Log("Regenerating");
+                gameManager.equationInts = ExpandedMath.generation(1);
+                gameManager.a = gameManager.equationInts[0];
+                gameManager.b = gameManager.equationInts[2];
+                gameManager.c = ExpandedMath.findSolution(gameManager.equationInts);
+                switch (gameManager.equationInts[1])
+                {
+                    case 1:
+                        gameManager.d = "*";
+                        break;
+
+                    case 2:
+                        gameManager.d = "/";
+                        break;
+
+                    case 3:
+                        gameManager.d = "+";
+                        break;
+
+                    case 4:
+                        gameManager.d = "-";
+                        break;
+                }
+
+                switch (this.gameObject.name)
+                {
+                    case "Block":
+                        value = gameManager.a.ToString();
+                        position = gameManager.spawnPositions[gameManager.randomArray[0]];
+                        break;
+
+                    case "Block (1)":
+                        value = gameManager.b.ToString();
+                        position = gameManager.spawnPositions[gameManager.randomArray[1]];
+                        break;
+
+                    case "Block (2)":
+                        value = gameManager.c.ToString();
+                        position = gameManager.spawnPositions[gameManager.randomArray[2]];
+                        break;
+
+                    case "Block (3)":
+                        value = gameManager.d;
+                        position = gameManager.spawnPositions[gameManager.randomArray[3]];
+                        break;
+
+                    case "Block (4)":
+                        value = gameManager.e;
+                        position = gameManager.spawnPositions[gameManager.randomArray[4]];
+                        break;
+                }
+
+           }*/
+
+            blockText.text = value;
+            this.gameObject.transform.position = position;
+
+            gameManager.isCorrect = false;
         }
     }
 
