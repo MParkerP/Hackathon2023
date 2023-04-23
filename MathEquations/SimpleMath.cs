@@ -53,7 +53,6 @@ namespace MathEquations
                     Console.WriteLine(Num1 + divide + Num2 + " = " + divMethod(Num1, Num2));
                     break;
             }
-            Console.WriteLine("\n" + C);
             
         }
 
@@ -67,9 +66,8 @@ namespace MathEquations
         {
             if(b > a)
             {
-                double d = b;
-                b = a;
-                a = d;
+                Num1 = a;
+                Num2 = b;
             }
 
             C = a-b;
