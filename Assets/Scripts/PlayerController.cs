@@ -10,7 +10,7 @@ public class PlayerController : MonoBehaviour
     private float verticalInput;
     private float horizontalInput;
     private Rigidbody2D playerRb;
-    public float speed;
+    public float speed = 5;
 
     //screen bounds
     [SerializeField] private float horizontalBoundary = 8.4f;
@@ -60,13 +60,14 @@ public class PlayerController : MonoBehaviour
             if (currentBlock != null)
             {
                 isGrabbing = true;
-            }
+                speed = 3;            }
             
         }
 
         if (Input.GetKeyUp(KeyCode.Space))
         {
             isGrabbing = false;
+            speed = 5;
         }
     }
 
