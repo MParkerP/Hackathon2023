@@ -1,0 +1,15 @@
+C:\Users\ronal\Downloads\College\Spring 2023\CSC 1351\WICSHack\Hackathon2023\MathEquations\bin\Debug\net6.0\MathEquations.exe
+C:\Users\ronal\Downloads\College\Spring 2023\CSC 1351\WICSHack\Hackathon2023\MathEquations\bin\Debug\net6.0\MathEquations.deps.json
+C:\Users\ronal\Downloads\College\Spring 2023\CSC 1351\WICSHack\Hackathon2023\MathEquations\bin\Debug\net6.0\MathEquations.runtimeconfig.json
+C:\Users\ronal\Downloads\College\Spring 2023\CSC 1351\WICSHack\Hackathon2023\MathEquations\bin\Debug\net6.0\MathEquations.dll
+C:\Users\ronal\Downloads\College\Spring 2023\CSC 1351\WICSHack\Hackathon2023\MathEquations\bin\Debug\net6.0\MathEquations.pdb
+C:\Users\ronal\Downloads\College\Spring 2023\CSC 1351\WICSHack\Hackathon2023\MathEquations\obj\Debug\net6.0\MathEquations.csproj.AssemblyReference.cache
+C:\Users\ronal\Downloads\College\Spring 2023\CSC 1351\WICSHack\Hackathon2023\MathEquations\obj\Debug\net6.0\MathEquations.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\ronal\Downloads\College\Spring 2023\CSC 1351\WICSHack\Hackathon2023\MathEquations\obj\Debug\net6.0\MathEquations.AssemblyInfoInputs.cache
+C:\Users\ronal\Downloads\College\Spring 2023\CSC 1351\WICSHack\Hackathon2023\MathEquations\obj\Debug\net6.0\MathEquations.AssemblyInfo.cs
+C:\Users\ronal\Downloads\College\Spring 2023\CSC 1351\WICSHack\Hackathon2023\MathEquations\obj\Debug\net6.0\MathEquations.csproj.CoreCompileInputs.cache
+C:\Users\ronal\Downloads\College\Spring 2023\CSC 1351\WICSHack\Hackathon2023\MathEquations\obj\Debug\net6.0\MathEquations.dll
+C:\Users\ronal\Downloads\College\Spring 2023\CSC 1351\WICSHack\Hackathon2023\MathEquations\obj\Debug\net6.0\refint\MathEquations.dll
+C:\Users\ronal\Downloads\College\Spring 2023\CSC 1351\WICSHack\Hackathon2023\MathEquations\obj\Debug\net6.0\MathEquations.pdb
+C:\Users\ronal\Downloads\College\Spring 2023\CSC 1351\WICSHack\Hackathon2023\MathEquations\obj\Debug\net6.0\MathEquations.genruntimeconfig.cache
+C:\Users\ronal\Downloads\College\Spring 2023\CSC 1351\WICSHack\Hackathon2023\MathEquations\obj\Debug\net6.0\ref\MathEquations.dll
