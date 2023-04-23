@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Block
   - Hand
+  - BlockDetector
   layers:
   - Default
   - TransparentFX
