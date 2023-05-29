@@ -1,281 +1,172 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics.Tracing;
 using Unity.VisualScripting;
 using UnityEngine;
-using TMPro;
-using MathBuds;
-using UnityEngine.SceneManagement;
+using System;
 
 public class Box : MonoBehaviour
 {
-    //screen bounds
-    [SerializeField] private float horizontalBoundary = 8.4f;
-    [SerializeField] private float verticalBoundary = 4.5f;
-    
-    //flags
     public bool canBeGrabbed;
-    public bool rightSnapping;
-    public bool leftSnapping;
-    public bool playerTouching;
-    public bool snapping;
-
-    //references
+    public bool isGrabbed;
+    public bool isNearBlock;
+    public GameObject player;
     public PlayerController playerController;
-    private Rigidbody2D blockRb;
-    public Rigidbody2D playerRb;
-    private float blockWidth;
-    private SpriteRenderer blockRend;
-    private GameObject leftBlock;
-    private GameObject rightBlock;
+    public Rigidbody2D boxRb;
 
-    //math stuff
-    public GameManager gameManager;
-    public string value = "";
-    public TextMeshProUGUI blockText;
-    public Vector3 position;
+    public GameObject leftBlock;
+    public GameObject rightBlock;
+    public RelativeJoint2D rightJoint;
 
-    void Start()
+    public float blockWidth;
+    public SpriteRenderer blockRenderer;
+
+    public bool hasBlockAttached;
+    public List<GameObject> attachedObjects;
+
+
+
+    //TODO: Make it possible for block to reattach if not pulled away AND one collider for both hands
+
+    private void Start()
     {
-        playerController = GameObject.Find("Player").GetComponent<PlayerController>();
-        playerRb = GameObject.Find("Player").GetComponent<Rigidbody2D>();
-        blockRb = GetComponent<Rigidbody2D>();
-        blockRend = GetComponent<SpriteRenderer>();
-        blockWidth = blockRend.bounds.size.x;
-        gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
-
-        switch(this.gameObject.name)
-        {
-            case "Block":
-                value = gameManager.a.ToString();
-                position = gameManager.spawnPositions[gameManager.randomArray[0]];
-                break;
-
-            case "Block (1)":
-                value = gameManager.b.ToString();
-                position = gameManager.spawnPositions[gameManager.randomArray[1]];
-                break;
-
-            case "Block (2)":
-                value = gameManager.c.ToString();
-                position = gameManager.spawnPositions[gameManager.randomArray[2]];
-                break;
-
-            case "Block (3)":
-                value = gameManager.d;
-                position = gameManager.spawnPositions[gameManager.randomArray[3]];
-                break;
-
-            case "Block (4)":
-                value = gameManager.e;
-                position = gameManager.spawnPositions[gameManager.randomArray[4]];
-                break;
-        }
-
-        blockText.text = value;
-        this.gameObject.transform.position = position;
-
-        
+        player = GameObject.Find("Player");
+        playerController = player.GetComponent<PlayerController>();
+        boxRb = GetComponent<Rigidbody2D>();
+        blockRenderer= GetComponent<SpriteRenderer>();
+        blockWidth = blockRenderer.bounds.size.x;
     }
 
-    // Update is called once per frame
-    void Update()
+    private void Update()
     {
-        //keep block in bounds
-        if (transform.position.x > horizontalBoundary)
+        //if player is grabbing this block, create connection between player and the block
+        if (isGrabbed)
         {
-            transform.position = new Vector3(horizontalBoundary, transform.position.y, 0);
-        }
-
-        if (transform.position.x < -horizontalBoundary)
-        {
-            transform.position = new Vector3(-horizontalBoundary, transform.position.y, 0);
-        }
-
-        if (transform.position.y > verticalBoundary)
-        {
-            transform.position = new Vector3(transform.position.x, verticalBoundary, 0);
-        }
-
-        if (transform.position.y < -verticalBoundary)
-        {
-            transform.position = new Vector3(transform.position.x, -verticalBoundary, 0);
-        }
-        
-        //player grabbing block
-        if (playerController.isGrabbing && playerController.currentBlock == this.gameObject)
-        {
-            blockRb.drag = 0;
-            blockRb.angularDrag = 0.05f;
-            blockRb.velocity = playerRb.velocity;
-        }
-        else
-        {
-            blockRb.drag = 20;
-            blockRb.angularDrag = 1;
-            blockRb.velocity = new Vector3(0, 0, 0);
-        }
-
-        if(!playerController.isGrabbing && !playerTouching)
-        {            
-            if (rightSnapping)
+            if (player.GetComponent<FixedJoint2D>() == null) 
             {
-                transform.position = new Vector3(rightBlock.transform.position.x - blockWidth/1.8f, rightBlock.transform.position.y, 0);
-            }
-            else if (leftSnapping)
-            {
-                transform.position = new Vector3(leftBlock.transform.position.x + blockWidth/1.8f, leftBlock.transform.position.y, 0);
+                FixedJoint2D playerJoint = player.AddComponent<FixedJoint2D>();
+                playerJoint.enableCollision = true; //IMPORTANT
+                playerJoint.connectedBody = boxRb;
             }
 
-
+            //if attached to other block, remove joint from this to right block and from left to this block
+            if (hasBlockAttached)
+            {
+                detachBlock(this.gameObject, leftBlock);
+            }
         }
 
-        if (leftSnapping || rightSnapping)
-        {
-            snapping = true;
-        }
-        else
-        {
-            snapping = false;
-        }
 
-        if (Input.GetKeyDown(KeyCode.R))
+        //check if block was detached but not removed from nearby blocks
+        if (isNearBlock && !hasBlockAttached && !playerController.isGrabbing)
         {
+            if (rightBlock != null)
+            {
+                attachBlock(rightBlock, rightJoint);
+            }
             
-            leftSnapping = false;
-            rightSnapping = false;
-            transform.position = position;
-
-            if (gameManager.isCorrect)
+            if (leftBlock != null)
             {
-                SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+                Box leftBlockScript = leftBlock.GetComponent<Box>();
+                leftBlockScript.attachBlock(leftBlockScript.rightBlock, leftBlockScript.rightJoint);
             }
+        }
 
-            //if (gameManager.isCorrect)
-/*            {
-                Debug.Log("Regenerating");
-                gameManager.equationInts = ExpandedMath.generation(1);
-                gameManager.a = gameManager.equationInts[0];
-                gameManager.b = gameManager.equationInts[2];
-                gameManager.c = ExpandedMath.findSolution(gameManager.equationInts);
-                switch (gameManager.equationInts[1])
-                {
-                    case 1:
-                        gameManager.d = "*";
-                        break;
-
-                    case 2:
-                        gameManager.d = "/";
-                        break;
-
-                    case 3:
-                        gameManager.d = "+";
-                        break;
-
-                    case 4:
-                        gameManager.d = "-";
-                        break;
-                }
-
-                switch (this.gameObject.name)
-                {
-                    case "Block":
-                        value = gameManager.a.ToString();
-                        position = gameManager.spawnPositions[gameManager.randomArray[0]];
-                        break;
-
-                    case "Block (1)":
-                        value = gameManager.b.ToString();
-                        position = gameManager.spawnPositions[gameManager.randomArray[1]];
-                        break;
-
-                    case "Block (2)":
-                        value = gameManager.c.ToString();
-                        position = gameManager.spawnPositions[gameManager.randomArray[2]];
-                        break;
-
-                    case "Block (3)":
-                        value = gameManager.d;
-                        position = gameManager.spawnPositions[gameManager.randomArray[3]];
-                        break;
-
-                    case "Block (4)":
-                        value = gameManager.e;
-                        position = gameManager.spawnPositions[gameManager.randomArray[4]];
-                        break;
-                }
-
-           }*/
-
-            blockText.text = value;
-            this.gameObject.transform.position = position;
-
-            gameManager.isCorrect = false;
+        //set block as having nothing attached if side blocks are both null
+        if (rightBlock == null && leftBlock == null)
+        {
+            hasBlockAttached = false;
         }
     }
 
-    private void OnTriggerEnter2D(Collider2D other)
+    private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (other.CompareTag("Hand"))
+        //player hand touching block
+        if (collision.CompareTag("Hand"))
         {
             canBeGrabbed = true;
             playerController.canGrab = true;
             playerController.currentBlock = this.gameObject;
         }
 
-        if (other.CompareTag("BlockDetector"))
+        //block enters left detector of other block
+        if (collision.CompareTag("LeftDetector"))
         {
-            if (other.gameObject.transform.position.x < this.gameObject.transform.position.x)
-            {
-                leftSnapping= true;
-                leftBlock = other.gameObject;
-            }
-
-            if (other.gameObject.transform.position.x > this.gameObject.transform.position.x)
-            {
-                rightSnapping = true;
-                rightBlock = other.gameObject;
-            }
-        }
+            isNearBlock = true;
+            rightBlock = collision.gameObject.transform.parent.gameObject;
+            attachBlock(rightBlock, rightJoint);
+        }        
     }
 
-    private void OnTriggerExit2D(Collider2D other)
+    private void OnTriggerExit2D(Collider2D collision)
     {
-        if (other.CompareTag("Hand"))
+        //player hands leave box
+        if (collision.CompareTag("Hand"))
         {
             canBeGrabbed = false;
             playerController.canGrab = false;
             playerController.currentBlock = null;
         }
 
-        if (other.CompareTag("BlockDetector"))
+        if (collision.CompareTag("LeftDetector"))
         {
-            if (other.gameObject.transform.position.x < this.gameObject.transform.position.x)
-            {
-                leftSnapping = false;
-                leftBlock = null;
-            }
+            isNearBlock = false;
+            rightBlock.GetComponent<Box>().leftBlock= null;
+            rightBlock = null;
 
-            if (other.gameObject.transform.position.x > this.gameObject.transform.position.x)
-            {
-                rightSnapping = false;
-                rightBlock = null;
-            }
         }
     }
+    
 
-    private void OnCollisionEnter2D(Collision2D collision)
+    //METHODS//
+
+    //return the middle y position betweeen two blocks
+    private float getMiddleY(GameObject object1, GameObject object2)
     {
-        if (collision.collider.CompareTag("Player"))
-        {
-            playerTouching = true;
-        }
+        return (object1.transform.position.y + object2.transform.position.y) / 2;
     }
 
-    private void OnCollisionExit2D(Collision2D collision)
+    //attach block together by creating joints and changing positions
+    private void attachBlock(GameObject block, RelativeJoint2D joint)
     {
-        if (collision.collider.CompareTag("Player"))
-        {
-            playerTouching = false;
-        }
+        Box blockScript = block.GetComponent<Box>();
+
+        //create a joint for the block
+        joint = this.gameObject.AddComponent<RelativeJoint2D>();
+
+        //make the joint attach to the block
+        joint.connectedBody = block.GetComponent<Rigidbody2D>();
+        joint.enableCollision = true;
+        joint.autoConfigureOffset = false;
+        joint.linearOffset = new Vector2(blockWidth, 0);
+
+        //flag this block as attached to another block
+        hasBlockAttached = true;
+
+        //update the other blocks information as well
+        blockScript.hasBlockAttached = true;
+        blockScript.leftBlock = this.gameObject;
+        blockScript.isNearBlock = true;
+
+        //make sure player no longer holding onto block
+        playerController.LetGo();
     }
+
+    //break joint from the block to the next, and the block before that is grabbing it
+    private void detachBlock(GameObject block1, GameObject block2)
+    {
+        UnityEngine.Object.Destroy(block1.GetComponent<RelativeJoint2D>());
+
+        if (block2 != null)
+        {
+            UnityEngine.Object.Destroy(block2.GetComponent<RelativeJoint2D>());
+        }
+
+        hasBlockAttached= false;
+        
+    }
+
+
+
+
 }

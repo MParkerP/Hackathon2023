@@ -6,7 +6,8 @@ TagManager:
   tags:
   - Block
   - Hand
-  - BlockDetector
+  - RightDetector
+  - LeftDetector
   layers:
   - Default
   - TransparentFX
@@ -14,8 +15,8 @@ TagManager:
   - 
   - Water
   - UI
-  - 
-  - 
+  - Detectors
+  - Hands
   - 
   - 
   - 
@@ -49,4 +50,7 @@ TagManager:
     locked: 0
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: Foreground
+    uniqueID: 2717296805
     locked: 0

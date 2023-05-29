@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
+using System.Xml.Schema;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
@@ -9,71 +10,50 @@ public class PlayerController : MonoBehaviour
     //player movement
     private float verticalInput;
     private float horizontalInput;
-    private Rigidbody2D playerRb;
+    public Rigidbody2D playerRb;
     public float speed = 5;
 
-    //screen bounds
-    [SerializeField] private float horizontalBoundary = 8.4f;
-    [SerializeField] private float verticalBoundary = 4.5f;
+    //edge collider
+    private EdgeCollider2D screenEdge;
 
     //grabbing
-    public GameObject currentBlock;
-    public bool canGrab;
     public bool isGrabbing;
-
-
+    public GameObject currentBlock;
+    public GameObject previousBlock;
+    public bool canGrab;
 
     void Start()
     {
         playerRb = GetComponent<Rigidbody2D>();
-        
+        ScreenBounds();
     }
 
-    // Update is called once per frame
-    void Update()
+    //player non-movement input
+    private void Update()
     {
-        if (transform.position.x > horizontalBoundary)
+        if (Input.GetKeyDown(KeyCode.Space))
         {
-            transform.position = new Vector3(horizontalBoundary, transform.position.y, 0);
-        }
-
-        if (transform.position.x < -horizontalBoundary)
-        {
-            transform.position = new Vector3(-horizontalBoundary, transform.position.y, 0);
-        }
-
-        if (transform.position.y > verticalBoundary)
-        {
-            transform.position = new Vector3(transform.position.x, verticalBoundary, 0);
-        }
-
-        if (transform.position.y < -verticalBoundary)
-        {
-            transform.position = new Vector3(transform.position.x, -verticalBoundary, 0);
-        }
-
-
-        if (Input.GetKey(KeyCode.Space))
-        {
-            if (currentBlock != null)
+            if (currentBlock!= null)
             {
                 isGrabbing = true;
-                speed = 3;            }
-            
+                previousBlock = currentBlock;
+                currentBlock.GetComponent<Box>().isGrabbed = true;
+            }
         }
 
         if (Input.GetKeyUp(KeyCode.Space))
         {
-            isGrabbing = false;
-            speed = 5;
+            LetGo();
         }
     }
 
+    //player movement
     private void FixedUpdate()
     {
         verticalInput = Input.GetAxisRaw("Vertical");
         horizontalInput = Input.GetAxisRaw("Horizontal");
 
+        //set sprite rotation according to player movement
         if (!isGrabbing)
         {
             switch (verticalInput, horizontalInput)
@@ -115,6 +95,42 @@ public class PlayerController : MonoBehaviour
         }
 
         playerRb.velocity = new Vector3(horizontalInput * speed, verticalInput * speed, 0);
+    }
+    
+
+    //METHODS//
+
+
+    //convert viewport corners into worldspace to get list of screen corner points
+    private List<Vector2> getScreenCorners()
+    {
+        Camera mainCam = Camera.main;
+        List<Vector2> points = new List<Vector2>();
+        points.Add(mainCam.ViewportToWorldPoint(new Vector3(0, 0, 0)));
+        points.Add(mainCam.ViewportToWorldPoint(new Vector3(1, 0, 0)));
+        points.Add(mainCam.ViewportToWorldPoint(new Vector3(1, 1, 0)));
+        points.Add(mainCam.ViewportToWorldPoint(new Vector3(0, 1, 0)));
+        points.Add(mainCam.ViewportToWorldPoint(new Vector3(0, 0, 0)));
+
+        return points;
+    }
+
+    //set camera edge collider to use screen corners as vertices
+    private void ScreenBounds()
+    {
+        screenEdge = Camera.main.GetComponent<EdgeCollider2D>();
+        screenEdge.SetPoints(getScreenCorners());
+    }
+
+    //make player let go of block
+    public void LetGo()
+    {
+        if (previousBlock!=null)
+        {
+            previousBlock.GetComponent<Box>().isGrabbed = false;
+        }
+        isGrabbing = false;
+        Object.Destroy(GetComponent<FixedJoint2D>());
     }
 
 }

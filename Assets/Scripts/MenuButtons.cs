@@ -6,14 +6,6 @@ using UnityEngine.SceneManagement;
 
 public class MenuButtons : MonoBehaviour
 {
-    public OperationsHolder operationHolder;
-
-    private void Start()
-    {
-        operationHolder = GameObject.Find("OperationsHolder").GetComponent<OperationsHolder>();
-    }
-
-    public ArrayList selectedOperators = new ArrayList();
     public void QuitGame()
     {
         Debug.Log("QUIT");
@@ -29,15 +21,5 @@ public class MenuButtons : MonoBehaviour
     {
 
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex - 1);
-    }
-
-    public void addToOperators(string op)
-    {
-        selectedOperators.Add(op);
-    }
-
-    public void setOperators()
-    {
-        operationHolder.operators = selectedOperators;
     }
 }
