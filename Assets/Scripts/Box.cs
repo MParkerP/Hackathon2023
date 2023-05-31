@@ -4,6 +4,7 @@ using System.Diagnostics.Tracing;
 using Unity.VisualScripting;
 using UnityEngine;
 using System;
+using TMPro;
 
 public class Box : MonoBehaviour
 {
@@ -24,9 +25,10 @@ public class Box : MonoBehaviour
     public bool hasBlockAttached;
     public List<GameObject> attachedObjects;
 
+    public TextMeshProUGUI visibleText;
+    public string blockText;
+    public bool holdingNumber;
 
-
-    //TODO: Make it possible for block to reattach if not pulled away AND one collider for both hands
 
     private void Start()
     {
@@ -35,6 +37,8 @@ public class Box : MonoBehaviour
         boxRb = GetComponent<Rigidbody2D>();
         blockRenderer= GetComponent<SpriteRenderer>();
         blockWidth = blockRenderer.bounds.size.x;
+        setBlockText(blockText);
+
     }
 
     private void Update()
@@ -163,7 +167,20 @@ public class Box : MonoBehaviour
         }
 
         hasBlockAttached= false;
-        
+    }
+
+    //set the visible text of the block in the scene
+    private void setBlockText(string text)
+    {
+        char character = (char)text[0];
+        visibleText.text = blockText;
+
+        //if the symbol is not a number make the font bigger and move it up for readability
+        if(!char.IsNumber(character))
+        {
+            visibleText.fontSize = 1.25f;
+            visibleText.transform.position += new Vector3(0,0.175f);
+        }
     }
 
 
