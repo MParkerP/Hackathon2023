@@ -11,6 +11,7 @@ using Mathbuds;
 using JetBrains.Annotations;
 using Random = System.Random;
 using System.Linq;
+using System.Data;
 
 public class GameManager : MonoBehaviour
 {
@@ -26,11 +27,16 @@ public class GameManager : MonoBehaviour
 
 
 
-    //Members and methods//
+    //Members//
+
 
     public List<string> operations;
     public int[] generatedEquation;
     public List<string> fullEquation;
+    public List<string> equationFromBlocks;
+    public string stringBlockEquation;
+
+    public bool hasCorrectEquation = false;
 
     public GameObject BoxPrefab;
     public Vector3 firstBlockSpawn = new Vector3(-5, 3);
@@ -40,12 +46,16 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-        operations = OperationsManager.instance.operations;
+        //operations = OperationsManager.instance.operations;
         generatedEquation = Mathbuds.ExpandedMath.generation(1);
         fullEquation = getFullEquation(generatedEquation);
         SetPossibleSpawns();
         spawnBlocks(fullEquation.Count, fullEquation);
     }
+
+
+    //Methods//
+
 
     private List<string> getFullEquation(int[] array)
     {
@@ -111,8 +121,87 @@ public class GameManager : MonoBehaviour
 
     }
 
+    private List<string> getEquationFromBlocks()
+    {
+        GameObject block1 = GameObject.Find("BoxPrefab(Clone)");
+        Box box1  = block1.GetComponent<Box>();
 
-    
+        while (box1.leftBlock!= null)
+        {
+            block1 = box1.leftBlock;
+            box1 = block1.GetComponent<Box>();
+        }
+
+        List<string> result = new List<string>();
+        result.Add(box1.blockText);
+
+        while (box1.rightBlock!= null)
+        {
+            string value = box1.rightBlock.GetComponent<Box>().blockText;
+
+            switch (value)
+            {
+                case "÷":
+                    value = "/";
+                    break;
+
+                case "x":
+                    value = "*";
+                    break;
+
+                case "—":
+                    value = "-";
+                    break;
+            }
+            
+            result.Add(value);
+            block1 = box1.rightBlock;
+            box1 = block1.GetComponent<Box>();
+        }
+
+        return result;
+    }
+
+    public void setEquationFromBlocks()
+    {
+        List<string> listEquation = getEquationFromBlocks();
+        equationFromBlocks = listEquation;
+
+        string result = "";
+        for (int i = 0; i < listEquation.Count; i++)
+        {
+            result += listEquation[i];
+        }
+
+        stringBlockEquation = result;
+
+    }
+
+    public bool EvaluateEquation(string equation)
+    {
+        Debug.Log("im working");
+        if (equationFromBlocks.Count != fullEquation.Count + 1)
+        {
+            return false;
+        }
+
+        string[] halves = equation.Split("=");
+        string lhs = halves[0];
+        string rhs = halves[1];
+        double lhResult = Convert.ToDouble(new DataTable().Compute(lhs, null));
+        double rhResult = Convert.ToDouble(new DataTable().Compute(rhs, null));
+        
+        return lhResult == rhResult;
+    }
+
+    public void checkCorrect()
+    {
+        hasCorrectEquation = EvaluateEquation(stringBlockEquation);
+        Debug.Log(hasCorrectEquation);
+    }
+
+
+
 
 
 

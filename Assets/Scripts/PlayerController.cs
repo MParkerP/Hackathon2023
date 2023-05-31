@@ -45,6 +45,12 @@ public class PlayerController : MonoBehaviour
         {
             LetGo();
         }
+
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            GameManager.instance.setEquationFromBlocks();
+            GameManager.instance.checkCorrect();
+        }
     }
 
     //player movement
