@@ -5,21 +5,17 @@ using UnityEngine;
 public class PauseControl : MonoBehaviour
 {
     public GameObject pauseMenu;
-
+    public GameObject settingsMenu;
 
     private void Update()
     {
-
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            if (pauseMenu.activeSelf)
+            if (!settingsMenu.activeSelf)
             {
-                pauseMenu.SetActive(false);
+                pauseMenu.SetActive(!pauseMenu.activeSelf);
             }
-            else
-            {
-                pauseMenu.SetActive(true);
-            }
+            
         }
     }
 }

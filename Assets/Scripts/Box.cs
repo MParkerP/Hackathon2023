@@ -29,6 +29,8 @@ public class Box : MonoBehaviour
     public string blockText;
     public bool holdingNumber;
 
+    public AudioSource click;
+
 
     private void Start()
     {
@@ -115,8 +117,12 @@ public class Box : MonoBehaviour
         if (collision.CompareTag("LeftDetector"))
         {
             isNearBlock = false;
-            rightBlock.GetComponent<Box>().leftBlock= null;
-            rightBlock = null;
+            if (rightBlock!= null)
+            {
+                rightBlock.GetComponent<Box>().leftBlock = null;
+                rightBlock = null;
+            }
+            
 
         }
     }
@@ -152,8 +158,19 @@ public class Box : MonoBehaviour
         blockScript.leftBlock = this.gameObject;
         blockScript.isNearBlock = true;
 
+        click.Play();
+
         //make sure player no longer holding onto block
         playerController.LetGo();
+
+        var joints = this.gameObject.GetComponents(typeof(RelativeJoint2D));
+        if (joints.Length > 1)
+        {
+            foreach (RelativeJoint2D thing in joints)
+            {
+                UnityEngine.Object.Destroy(thing);
+            }
+        }
     }
 
     //break joint from the block to the next, and the block before that is grabbing it
@@ -176,13 +193,12 @@ public class Box : MonoBehaviour
         visibleText.text = blockText;
 
         //if the symbol is not a number make the font bigger and move it up for readability
-        if(!char.IsNumber(character))
+        if (!char.IsNumber(character))
         {
             visibleText.fontSize = 1.25f;
-            visibleText.transform.position += new Vector3(0,0.175f);
+            visibleText.transform.position += new Vector3(0, 0.175f);
         }
     }
-
 
 
 

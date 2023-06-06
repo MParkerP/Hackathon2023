@@ -30,7 +30,7 @@ namespace Mathbuds
             Console.WriteLine("The Solution is: " + solution);
         }*/
 
-        public static int[] generation(int difficulty)
+        public static int[] generation(int difficulty, List<string> selectedOperators)
         {
 
             int arrSize;
@@ -65,9 +65,20 @@ namespace Mathbuds
             }
 
             // Generates the operations on odd indexes
+            List<string> possibleOperators = new List<string>{ "placeholder", "*", "/", "+", "-" };
+
             for (int i = 1; i < arr.Length; i += 2)
             {
-                arr[i] = rand.Next(0, 4) + 1;
+                string generatedOperator = "";
+                int aNum = 0;
+                while (!selectedOperators.Contains(generatedOperator))
+                {
+                    aNum = rand.Next(0, 4) + 1;
+                    generatedOperator = possibleOperators[aNum];
+                }
+                
+                arr[i] = aNum;
+
             }
 
             //This verifies that difficult Multiplication (Numbers Higher than 12), Non-whole division, and negative numbers never occur

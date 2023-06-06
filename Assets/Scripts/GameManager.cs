@@ -12,16 +12,24 @@ using JetBrains.Annotations;
 using Random = System.Random;
 using System.Linq;
 using System.Data;
+using Unity.Profiling.Editor;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
     //Singleton//
-    public static GameManager instance;
+    public static GameManager instance { get; set; }
 
     private void Awake()
     {
+        if (instance != null && instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+
         instance = this;
-        DontDestroyOnLoad(this.gameObject);
+        DontDestroyOnLoad(gameObject);
     }
 
 
@@ -40,22 +48,39 @@ public class GameManager : MonoBehaviour
 
     public GameObject BoxPrefab;
     public Vector3 firstBlockSpawn = new Vector3(-5, 3);
-    public Vector3 lastBlockSpawn = new Vector3(0, -2);
+    public Vector3 lastBlockSpawn = new Vector3(1, -2);
 
     public List<Vector3> possibleSpawns;
 
-    private void Start()
+    private void OnEnable()
     {
-        //operations = OperationsManager.instance.operations;
-        generatedEquation = Mathbuds.ExpandedMath.generation(1);
+        // Subscribe to the sceneLoaded event
+        SceneManager.sceneLoaded += OnSceneLoaded;
+    }
+
+    private void OnDisable()
+    {
+        // Unsubscribe from the sceneLoaded event
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+    }
+
+    private void OnSceneLoaded(Scene scene, LoadSceneMode loadSceneMode)
+    {
+        if (scene.buildIndex == 1)
+        {
+            PrepareGameScene();
+        }
+    }
+
+    //Methods//
+    private void PrepareGameScene()
+    {
+        SetOperations();
+        generatedEquation = Mathbuds.ExpandedMath.generation(1, operations);
         fullEquation = getFullEquation(generatedEquation);
         SetPossibleSpawns();
         spawnBlocks(fullEquation.Count, fullEquation);
     }
-
-
-    //Methods//
-
 
     private List<string> getFullEquation(int[] array)
     {
@@ -85,8 +110,6 @@ public class GameManager : MonoBehaviour
 
     private void spawnBlocks(int numBlocks, List<string> equation)
     {
-        Vector3 spawnPosition = firstBlockSpawn;
-
         for (int i = 0; i < numBlocks; i++)
         {
             GameObject thisBlock = Instantiate(BoxPrefab, possibleSpawns[i], BoxPrefab.transform.rotation);
@@ -185,6 +208,11 @@ public class GameManager : MonoBehaviour
             return false;
         }
 
+        if (!checkValidEquation(equation))
+        {
+            return false;
+        }
+
         string[] halves = equation.Split("=");
         string lhs = halves[0];
         string rhs = halves[1];
@@ -199,6 +227,25 @@ public class GameManager : MonoBehaviour
         hasCorrectEquation = EvaluateEquation(stringBlockEquation);
         Debug.Log(hasCorrectEquation);
     }
+
+    private bool checkValidEquation(string equation)
+    {
+        char finalChar = (char) equation[equation.Length - 1];
+        char firstChar = (char) equation[0];
+
+        //first and last char must be numbers
+        if (!char.IsNumber(finalChar) || !char.IsNumber(firstChar))
+        {
+            return false;
+        }
+
+        return true;
+    }
+
+    public void SetOperations()
+    {
+        operations = OperationsManager.instance.operations;
+    }    
 
 
 
