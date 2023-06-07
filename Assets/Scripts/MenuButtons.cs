@@ -17,12 +17,17 @@ public class MenuButtons : MonoBehaviour
 
     public void PlayGame()
     {
+        OperationsManager.instance.validPossibleSettings = false;
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
     }
 
     public void ResetScene()
     {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        if (OperationsManager.instance.validPossibleSettings)
+        {
+            OperationsManager.instance.validPossibleSettings = false;
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        }
     }
 
     public void goMainMenu()
@@ -59,8 +64,12 @@ public class MenuButtons : MonoBehaviour
 
     public void SetOperationsFromTemp()
     {
-        List<string> operations = new List<string>(OperationsManager.instance.possibleOperations);
-        OperationsManager.instance.operations = operations;
+        if (OperationsManager.instance.validPossibleSettings)
+        {
+            List<string> operations = new List<string>(OperationsManager.instance.possibleOperations);
+            OperationsManager.instance.operations = operations;
+        }
+        
     }
 
     public void SetDifficulty(int diff)
@@ -75,8 +84,11 @@ public class MenuButtons : MonoBehaviour
 
     public void SetDifficultyFromTemp()
     {
-        int difficulty = OperationsManager.instance.possibleDifficulty;
-        OperationsManager.instance.difficulty = difficulty;
+        if (OperationsManager.instance.validPossibleSettings)
+        {
+            int difficulty = OperationsManager.instance.possibleDifficulty;
+            OperationsManager.instance.difficulty = difficulty;
+        }
     }
 
     public void ResetSettings()
@@ -86,5 +98,7 @@ public class MenuButtons : MonoBehaviour
         OperationsManager.instance.possibleDifficulty = 0;
         OperationsManager.instance.possibleOperations = new List<string>();
     }
+
+    
 
 }

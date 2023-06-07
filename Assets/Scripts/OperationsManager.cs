@@ -24,6 +24,7 @@ public class OperationsManager : MonoBehaviour
     public int possibleDifficulty = 0;
     public List<string> possibleOperations = new List<string>();
 
+    public bool validPossibleSettings = false;
 
 
 }

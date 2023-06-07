@@ -52,6 +52,8 @@ public class GameManager : MonoBehaviour
 
     public List<Vector3> possibleSpawns;
 
+    public List<GameObject> allBoxes;
+
     private void OnEnable()
     {
         // Subscribe to the sceneLoaded event
@@ -114,10 +116,14 @@ public class GameManager : MonoBehaviour
         {
             GameObject thisBlock = Instantiate(BoxPrefab, possibleSpawns[i], BoxPrefab.transform.rotation);
             thisBlock.GetComponent<Box>().blockText = equation[i].ToString();
+            thisBlock.GetComponent<Box>().startingPosition = thisBlock.transform.position;
+            allBoxes.Add(thisBlock);
         }
 
         GameObject lastBlock = Instantiate(BoxPrefab, lastBlockSpawn, BoxPrefab.transform.rotation);
         lastBlock.GetComponent<Box>().blockText = "=";
+        lastBlock.GetComponent<Box>().startingPosition = lastBlock.transform.position;
+        allBoxes.Add(lastBlock);
     }
 
     private void SetPossibleSpawns()
@@ -246,6 +252,20 @@ public class GameManager : MonoBehaviour
     {
         operations = OperationsManager.instance.operations;
     }    
+
+    public void ResetAllBlocks()
+    {
+        foreach (GameObject block in allBoxes)
+        {
+            GameObject.Destroy(block.GetComponent<RelativeJoint2D>());
+        }
+
+        foreach (GameObject block in allBoxes)
+        {
+            Box currentBox = block.GetComponent<Box>();
+            block.transform.position = currentBox.startingPosition;
+        }
+    }
 
 
 

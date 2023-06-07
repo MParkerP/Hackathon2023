@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class Settings_Main : MonoBehaviour
@@ -15,6 +16,8 @@ public class Settings_Main : MonoBehaviour
     //Difficulty Selection
     public List<Toggle> difficultyToggles = new List<Toggle>();
     public ToggleGroup diffcultyToggleGroup;
+
+    public GameObject warningMessage;
 
     private void Start()
     {
@@ -78,5 +81,53 @@ public class Settings_Main : MonoBehaviour
     public void GMSetOperators()
     {
         GameManager.instance.SetOperations();
+    }
+
+ 
+
+    //ensure that at least one difficulty toggle is selected
+    public bool checkValidDifficulty()
+    {
+        foreach (Toggle toggle in difficultyToggles)
+        {
+            if (toggle.isOn)
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    //ensure that at least one operation has been selected
+    public bool checkValidOperations()
+    {
+        if (OperationsManager.instance.possibleOperations.Count > 0)
+        {
+            return true;
+        }
+
+        return false;
+    }
+
+    public void checkValidSettings()
+    {
+        bool result = checkValidDifficulty() && checkValidOperations();
+        OperationsManager.instance.validPossibleSettings = result;
+        if (result == false)
+        {
+            if (!warningMessage.activeSelf)
+            {
+                warningMessage.SetActive(true);
+            }
+        }
+
+        if (result == true)
+        {
+            if (warningMessage.activeSelf)
+            {
+                warningMessage.SetActive(false);
+            }
+        }
     }
 }
