@@ -242,6 +242,7 @@ MonoBehaviour:
   blockText: 
   holdingNumber: 0
   click: {fileID: 924557980365753329}
+  startingPosition: {x: 0, y: 0, z: 0}
 --- !u!82 &924557980365753329
 AudioSource:
   m_ObjectHideFlags: 0
@@ -251,7 +252,7 @@ AudioSource:
   m_GameObject: {fileID: 2889918613525980171}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
+  OutputAudioMixerGroup: {fileID: -8939814696849366065, guid: eb9f6ddc30dd1424d825966e53ca5f2d, type: 2}
   m_audioClip: {fileID: 8300000, guid: 8cf3b4d0c61643042bcaa9879d654bd2, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 0.25

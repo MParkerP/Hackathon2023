@@ -53,6 +53,10 @@ public class GameManager : MonoBehaviour
     public List<Vector3> possibleSpawns;
 
     public List<GameObject> allBoxes;
+    public GameObject correctAnswerScreen;
+
+    public AudioSource correctSound;
+    public AudioSource incorrectSound;
 
     private void OnEnable()
     {
@@ -82,6 +86,7 @@ public class GameManager : MonoBehaviour
         fullEquation = getFullEquation(generatedEquation);
         SetPossibleSpawns();
         spawnBlocks(fullEquation.Count, fullEquation);
+        correctAnswerScreen = GameObject.FindWithTag("Correct");
     }
 
     private List<string> getFullEquation(int[] array)
@@ -208,7 +213,6 @@ public class GameManager : MonoBehaviour
 
     public bool EvaluateEquation(string equation)
     {
-        Debug.Log("im working");
         if (equationFromBlocks.Count != fullEquation.Count + 1)
         {
             return false;
@@ -231,7 +235,17 @@ public class GameManager : MonoBehaviour
     public void checkCorrect()
     {
         hasCorrectEquation = EvaluateEquation(stringBlockEquation);
-        Debug.Log(hasCorrectEquation);
+        if (hasCorrectEquation)
+        {
+            correctSound.Play();
+            correctAnswerScreen.GetComponent<CanvasGroup>().alpha = 1;
+            correctAnswerScreen.GetComponent<CanvasGroup>().blocksRaycasts= true;
+        }
+        else
+        {
+            incorrectSound.Play();
+        }
+        
     }
 
     private bool checkValidEquation(string equation)

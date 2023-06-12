@@ -21,13 +21,24 @@ public class MenuButtons : MonoBehaviour
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
     }
 
-    public void ResetScene()
+    public void ConditionalResetScene()
     {
         if (OperationsManager.instance.validPossibleSettings)
         {
             OperationsManager.instance.validPossibleSettings = false;
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+            GameManager.instance.allBoxes = new List<GameObject>();
+            GameManager.instance.hasCorrectEquation = false;
+
         }
+    }
+
+    public void ResetScene()
+    {
+        OperationsManager.instance.validPossibleSettings = false;
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        GameManager.instance.hasCorrectEquation= false;
+        GameManager.instance.allBoxes = new List<GameObject>();
     }
 
     public void goMainMenu()
@@ -97,6 +108,19 @@ public class MenuButtons : MonoBehaviour
         OperationsManager.instance.operations = new List<string>();
         OperationsManager.instance.possibleDifficulty = 0;
         OperationsManager.instance.possibleOperations = new List<string>();
+        GameManager.instance.allBoxes = new List<GameObject>();
+        AudioManager.instance.ambience.Stop();
+    }
+
+    public void SetEquationIncorrect()
+    {
+        GameManager.instance.hasCorrectEquation = false;
+    }
+
+    public void HideCorrectMenu()
+    {
+        GameManager.instance.correctAnswerScreen.GetComponent<CanvasGroup>().alpha = 0;
+        GameManager.instance.correctAnswerScreen.GetComponent<CanvasGroup>().blocksRaycasts = false;
     }
 
     

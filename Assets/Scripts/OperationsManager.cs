@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class OperationsManager : MonoBehaviour
@@ -25,6 +26,5 @@ public class OperationsManager : MonoBehaviour
     public List<string> possibleOperations = new List<string>();
 
     public bool validPossibleSettings = false;
-
 
 }

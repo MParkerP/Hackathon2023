@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Audio;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
@@ -18,9 +20,11 @@ public class Settings_Main : MonoBehaviour
     public ToggleGroup diffcultyToggleGroup;
 
     public GameObject warningMessage;
+    public AudioMixerGroup soundEffectsGroup;
 
     private void Start()
     {
+        StartCoroutine(UnmuteClickSound());
         SetSettings();
         OperationsManager.instance.possibleOperations = new List<string>(OperationsManager.instance.operations);
     }
@@ -64,6 +68,7 @@ public class Settings_Main : MonoBehaviour
         {
             minusToggle.isOn = false;
         }
+
 
     }
 
@@ -129,5 +134,12 @@ public class Settings_Main : MonoBehaviour
                 warningMessage.SetActive(false);
             }
         }
+    }
+
+    private IEnumerator UnmuteClickSound()
+    {
+        AudioManager.instance.clickSoundEffect.volume = 0;
+        yield return new WaitForSeconds(1f);
+        AudioManager.instance.clickSoundEffect.volume = 0.25f;
     }
 }

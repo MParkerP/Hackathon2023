@@ -9,11 +9,12 @@ public class PauseControl : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Escape))
+        if (Input.GetKeyDown(KeyCode.Escape) && !GameManager.instance.hasCorrectEquation)
         {
             if (!settingsMenu.activeSelf)
             {
                 pauseMenu.SetActive(!pauseMenu.activeSelf);
+                AudioManager.instance.playButton();
             }
             
         }

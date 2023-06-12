@@ -8,6 +8,7 @@ TagManager:
   - Hand
   - RightDetector
   - LeftDetector
+  - Correct
   layers:
   - Default
   - TransparentFX
