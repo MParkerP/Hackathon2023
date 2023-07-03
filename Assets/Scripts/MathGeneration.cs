@@ -32,24 +32,16 @@ namespace Mathbuds
 
         public static int[] generation(int difficulty, List<string> selectedOperators)
         {
-
-            int arrSize;
-            Random rand = new Random();
-            /*
-                Sets size of equation deonoted by difficulty
-                Each # refers to the amount of operations (ex: Difficulty 1 = 1 operation)
-            */
-            switch (difficulty)
+            Random random = new Random();
+            difficulty = 3;
+            int[] arr = new int[difficulty * 2 + 1];
+            Debug.Log(difficulty);
+            bool hasDivision = false;
+            //Generate Operands
+            for (int i = 0; i < arr.Length; i += 2)
             {
-                case 1: arrSize = 3; break;
-                case 2: arrSize = 5; break;
-                case 3: arrSize = 7; break;
-                case 4: arrSize = 9; break;
-                default: arrSize = 0; break;
+                arr[i] = random.Next(24) + 1;
             }
-
-            //Creates an array to store the equation. Even indexes are numbers, odd indexes are operations
-            int[] arr = new int[arrSize];
             /*
                 Operations Key:
                 1 = Multiplication
@@ -57,85 +49,108 @@ namespace Mathbuds
                 3 = Addition
                 4 = Subtraction
             */
-
-            //Generates a random number between 1 and 26 every even index.
-            for (int i = 0; i < arr.Length; i += 2)
-            {
-                arr[i] = rand.Next(25) + 1;
-            }
-
             // Generates the operations on odd indexes
-            List<string> possibleOperators = new List<string>{ "placeholder", "*", "/", "+", "-" };
+            List<string> possibleOperators = new List<string> { "placeholder", "*", "/", "+", "-" };
 
             for (int i = 1; i < arr.Length; i += 2)
             {
                 string generatedOperator = "";
-                int aNum = 0;
+                int operators = -1;
                 while (!selectedOperators.Contains(generatedOperator))
                 {
-                    aNum = rand.Next(0, 4) + 1;
-                    generatedOperator = possibleOperators[aNum];
+                    do
+                    {
+                        operators = random.Next(0, 4) + 1;
+                        generatedOperator = possibleOperators[operators];
+                    } while (operators == 2 && hasDivision);
                 }
-                
-                arr[i] = aNum;
 
-            }
-
-            //This verifies that difficult Multiplication (Numbers Higher than 12), Non-whole division, and negative numbers never occur
-            //TODO- This is not scaled for more than one operation. Perhaps a for loop starting at i = 1 and i+=2 would fix this, but division needs reworked
-            switch (arr[1])
-            {
-                case 1:
-                    if (arr[0] > 12 || arr[2] > 12)
-                    {
-                        //if the numbers being multiplied are greater than 12, they are regenerated
-                        arr[0] = rand.Next(12) + 1;
-                        arr[2] = rand.Next(12) + 1;
-                    }
-                    break;
-                case 2:
-                    if (arr[0] > 12 || arr[2] > 12 || arr[0] == 0 || arr[2] == 0)
-                    {
-                        //If dividing numbers are greater than 12, or we are dividing by zero, regenerate numbers
-                        arr[0] = rand.Next(12) + 1;
-                        arr[2] = rand.Next(12) + 1;
-                    }
-                    break;
-                case 4:
-                    if (arr[2] > arr[0])
-                    {
-                        //Flips two numbers if they subtract to be a negative number
-                        int d = arr[2];
-                        arr[2] = arr[0];
-                        arr[0] = d;
-                    }
-                    break;
-                default:
-                    break;
-            }
-
-
-            // Check to see if the numbers for division equals an integer. If not, generate new numbers
-            if (arr[1] == 2 && arr[0] % arr[2] != 0)
-            {
-                while (arr[1] == 2 && arr[0] % arr[2] != 0)
+                if(operators == 2)
                 {
-                    arr[0] = rand.Next(12) + 1;
-                    arr[2] = rand.Next(12) + 1;
-
-                    /*Note: This will not work with larger equations (if expanded with a for loop as described above the above switch statement)
-                        Example: Given an equation 3 / 4 / 9
-                        It would regenerate 3 and 4 until their division is a whole number. Lets say this new equation is now 10 / 2 / 9.
-                        Then it would regenerate the 2 and the 9 until the division is a whole number. Lets say this turns out to be 10 / 3 / 6. 
-
-                        The program would then be complete with an equation 10 / 3 / 6, which will not be a whole number when dividied. 
-
-                        A solution to this could be hardcoding only one division operation in the equation, and that could be checked using a similar switch statement as above. 
-                    */
+                    hasDivision = true;
                 }
+                arr[i] = operators;
+
+            }
+
+            if (checkEqu(arr))
+            {
+                arr = generation(difficulty, selectedOperators);
             }
 
             return arr;
+
+        }
+
+        public static bool checkEqu(int[] arr)
+        {
+            Random random = new Random();
+            bool containsMLeft = false;
+            bool containsMRight = false;
+            for (int i = 1; i < arr.Length; i += 2)
+            {
+                switch (arr[i])
+                {
+                    case 1:
+                        //Makes multiplication no greater than 12
+                        if (arr[i - 1] > 12 || arr[i + 1] > 12) { arr[i - 1] = random.Next(11) + 1; arr[i + 1] = random.Next(11) + 1; }
+                        break;
+                    case 2:
+                        //Makes division no greater than 12
+                        if (arr[i - 1] > 12 || arr[i + 1] > 12) { arr[i - 1] = random.Next(11) + 1; arr[i + 1] = random.Next(11) + 1; }
+                        /**
+                         * This algorithm splits the equation from the division sign and checks if multiplication would impact the divisor/dividend
+                         * it then checks the equation to verify that once impacted numbers are changed, division still stays whole. 
+                         * 
+                         */
+                        int[] leftSide = new int[i];
+                        int[] rightSide = new int[arr.Length - i - 1];
+                        for (int j = 0; j < i; j++)
+                        {
+                            leftSide[j] = arr[j];
+                        }
+                        for (int j = 0; j < arr.Length - i - 1; j++)
+                        {
+                            rightSide[j] = arr[j + i + 1];
+                        }
+
+                        if (!(i - 2 < 0))
+                        {
+                            if (arr[i - 2] == 1)
+                            {
+                                containsMLeft = true;
+                            }
+                        }
+
+                        if (!(i + 3 > arr.Length))
+                        {
+                            if (arr[i + 2] == 1)
+                            {
+                                containsMRight = true;
+                            }
+                        }
+
+                        if (!containsMLeft)
+                        {
+                            int[] temp = { arr[i - 1] };
+                            leftSide = temp;
+                        }
+                        if (!containsMRight)
+                        {
+                            int[] temp = { arr[i + 1] };
+                            rightSide = temp;
+                        }
+                        if (findSolution(leftSide) % findSolution(rightSide) != 0)
+                        {
+                            return true;
+                        }
+                        break;
+                    case 4:
+                        if (findSolution(arr) < 0) { return true; }
+                            break;
+                }
+            }
+            return false;
         }
 
         public static int findSolution(int[] arr)
@@ -157,56 +172,111 @@ namespace Mathbuds
                     Now the array is of size = 1, 11 is the solution to the equation
             */
             bool mdDone = false;
+            int numOfmd = 0;
             int solution = 0;
             bool operationDone = false;
-            for (int i = 1; i < arr.Length; i += 2)
+            while (arr.Length != 1)
             {
-                int temp = 0;
-                if (!mdDone)
+                for (int i = 1; i < arr.Length; i += 2)
                 {
-                    if (arr[i] == 1 || arr[i] == 2)
+                    if (arr[i] == 1 || arr[i] == 2) { numOfmd++; }
+                }
+                for (int i = 1; i < arr.Length; i += 2)
+                {
+                    int temp = 0;
+                    if (!mdDone && !operationDone)
                     {
+
                         switch (arr[i])
                         {
-                            case 1: temp = arr[i - 1] * arr[i + 1]; operationDone = true; break;
-                            case 2: temp = arr[i - 1] / arr[i + 1]; operationDone = true; break;
+                            case 1: temp = arr[i - 1] * arr[i + 1]; operationDone = true; numOfmd--; break;
+                            case 2: temp = arr[i - 1] / arr[i + 1]; operationDone = true; numOfmd--; break;
 
                             default: break;
                         }
-                    }
-                    else { mdDone = true; }
-                }
-                if (mdDone)
-                {
-                    switch (arr[i])
-                    {
-                        case 3: temp = arr[i - 1] + arr[i + 1]; operationDone = true; break;
-                        case 4: temp = arr[i - 1] - arr[i + 1]; operationDone = true; break;
-                        default: break;
-                    }
-                }
+                        if (numOfmd == 0)
+                        {
+                            mdDone = true;
+                        }
 
-                if (operationDone)
-                {
-                    int[] tempArr = new int[arr.Length - 2];
-                    int count = 1;
-                    tempArr[0] = temp;
-                    for (int j = 3; j < arr.Length; j++)
-                    {
-                        tempArr[count] = arr[j];
-                        count++;
-                    }
-                    arr = tempArr;
 
+                    }
+                    if (mdDone && !operationDone)
+                    {
+                        switch (arr[i])
+                        {
+                            case 3: temp = arr[i - 1] + arr[i + 1]; operationDone = true; break;
+                            case 4: temp = arr[i - 1] - arr[i + 1]; operationDone = true; break;
+                            default: break;
+                        }
+                    }
+
+                    if (operationDone)
+                    {
+                        int[] tempArr = new int[arr.Length - 2];
+                        tempArr[i - 1] = temp;
+                        for (int j = 0; j < tempArr.Length; j++)
+                        {
+                            if (j < i - 1)
+                            {
+                                tempArr[j] = arr[j];
+                            }
+                            else if (j > i - 1)
+                            {
+                                tempArr[j] = arr[j + 2];
+                            }
+                        }
+                        arr = tempArr;
+                        operationDone = false;
+                        i = -1;
+                    }
                 }
             }
 
 
             solution = arr[0];
 
-
-
             return solution;
+        }
+
+        public static int SolveEquation(int[] array)
+        {
+            
+            int result = array[0];
+            // Perform multiplication and division operations first
+            for (int i = 1; i < array.Length; i += 2)
+            {
+                int operatorNumber = array[i];
+                int operand = array[i + 1];
+
+                if (operatorNumber == 1) // Multiplication
+                {
+                    result *= operand;
+                }
+                else if (operatorNumber == 2) // Division
+                {
+                    result /= operand;
+                }
+            }
+
+            // Calculate the final result by performing addition and subtraction operations
+            for (int i = 1; i < array.Length; i += 2)
+            {
+                int operatorNumber = array[i];
+                int operand = array[i + 1];
+
+                if (operatorNumber == 3) // Addition
+                {
+                    result += operand;
+                }
+                else if (operatorNumber == 4) // Subtraction
+                {
+                    result -= operand;
+                }
+            }
+
+            return result;
+           
         }
     }
 
