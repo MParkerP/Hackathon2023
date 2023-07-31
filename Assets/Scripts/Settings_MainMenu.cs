@@ -9,6 +9,8 @@ public class Settings_MainMenu : MonoBehaviour
     public List<Toggle> difficultyToggles;
     public GameObject warningMessage;
 
+    public GameObject divisionWarning;
+
     //ensure that at least one difficulty toggle is selected
     public bool checkValidDifficulty()
     {
@@ -34,19 +36,38 @@ public class Settings_MainMenu : MonoBehaviour
         return false;
     }
 
+    //ensure that more than division is selected on higher difficulties
+    public bool checkValidDivision()
+    {
+        if (OperationsManager.instance.difficulty != 1)
+        {
+            if (OperationsManager.instance.operations.Contains("/") && OperationsManager.instance.operations.Count == 1) 
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
     public bool checkValidSettings()
     {
-        return checkValidDifficulty() && checkValidOperations();
+        return checkValidDifficulty() && checkValidOperations() && checkValidDivision();
     }
 
     public void AttemptStartGame()
     {
         if (checkValidSettings())
         {
-            //turn of warning message if on
+            //turn off warning message if on
             if (warningMessage.activeSelf)
             {
                 warningMessage.SetActive(false);
+            }
+
+            if (divisionWarning.activeSelf)
+            {
+                divisionWarning.SetActive(false);
             }
 
             //load the game scene
@@ -54,10 +75,29 @@ public class Settings_MainMenu : MonoBehaviour
         }
         else
         {
-            //turn on warning message if off
-            if (!warningMessage.activeSelf)
+            if (!checkValidDivision())
             {
-                warningMessage.SetActive(true);
+                if (warningMessage.activeSelf)
+                {
+                    warningMessage.SetActive(false);
+                }
+
+                if (!divisionWarning.activeSelf)
+                {
+                    divisionWarning.SetActive(true);
+                }
+            }
+            else
+            {
+                if (divisionWarning.activeSelf)
+                {
+                    divisionWarning.SetActive(false);
+                }
+
+                if (!warningMessage.activeSelf)
+                {
+                    warningMessage.SetActive(true);
+                }
             }
         }
     }

@@ -26,16 +26,16 @@ public class AudioManager : MonoBehaviour
     [SerializeField] private AudioSource music;
     public AudioSource ambience;
 
-    private static bool isSoundEnabled = true;
-    private static bool isMusicEnabled = true;
+    [SerializeField] private bool isSoundEnabled = true;
+    [SerializeField] private bool isMusicEnabled = true;
 
-    public static bool IsSoundEnabled
+    public bool IsSoundEnabled
     {
         get { return isSoundEnabled; }
         set { isSoundEnabled = value; }
     }
 
-    public static bool IsMusicEnabled
+    public bool IsMusicEnabled
     {
         get { return isMusicEnabled; }
         set { isMusicEnabled = value; }

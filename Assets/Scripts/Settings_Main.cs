@@ -20,6 +20,7 @@ public class Settings_Main : MonoBehaviour
     public ToggleGroup diffcultyToggleGroup;
 
     public GameObject warningMessage;
+    public GameObject divisionWarning;
     public AudioMixerGroup soundEffectsGroup;
 
     private void Start()
@@ -115,16 +116,50 @@ public class Settings_Main : MonoBehaviour
         return false;
     }
 
+    public bool checkValidDivision()
+    {
+        if (OperationsManager.instance.possibleDifficulty != 1)
+        {
+            if (OperationsManager.instance.possibleOperations.Contains("/") && OperationsManager.instance.possibleOperations.Count == 1)
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
     public void checkValidSettings()
     {
-        bool result = checkValidDifficulty() && checkValidOperations();
+        bool result = checkValidDifficulty() && checkValidOperations() && checkValidDivision();
         OperationsManager.instance.validPossibleSettings = result;
         if (result == false)
         {
-            if (!warningMessage.activeSelf)
+            if (!checkValidDivision())
             {
-                warningMessage.SetActive(true);
+                if (warningMessage.activeSelf)
+                {
+                    warningMessage.SetActive(false);
+                }
+
+                if (!divisionWarning.activeSelf)
+                {
+                    divisionWarning.SetActive(true);
+                }
             }
+            else
+            {
+                if (divisionWarning.activeSelf)
+                {
+                    divisionWarning.SetActive(false);
+                }
+
+                if (!warningMessage.activeSelf)
+                {
+                    warningMessage.SetActive(true);
+                }
+            }
+
         }
 
         if (result == true)

@@ -12,7 +12,7 @@ public class SoundToggleController : MonoBehaviour
 
     void Start()
     {
-        if (AudioManager.IsMusicEnabled)
+        if (AudioManager.instance.IsMusicEnabled)
         {
             musicEnabledButton.SetActive(true);
             musicMutedButton.SetActive(false);
@@ -23,7 +23,7 @@ public class SoundToggleController : MonoBehaviour
             musicEnabledButton.SetActive(false);
         }
 
-        if (AudioManager.IsSoundEnabled)
+        if (AudioManager.instance.IsSoundEnabled)
         {
             effectsEnabledButton.SetActive(true);
             effectsMutedButton.SetActive(false);

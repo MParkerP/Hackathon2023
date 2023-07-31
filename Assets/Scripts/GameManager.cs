@@ -32,8 +32,9 @@ public class GameManager : MonoBehaviour
         DontDestroyOnLoad(gameObject);
     }
 
-
-
+    /*TODO
+     *  art??
+     */
 
     //Members//
 
@@ -47,8 +48,8 @@ public class GameManager : MonoBehaviour
     public bool hasCorrectEquation = false;
 
     public GameObject BoxPrefab;
-    public Vector3 firstBlockSpawn = new Vector3(-5, 3);
-    public Vector3 lastBlockSpawn = new Vector3(1, -2);
+    public Vector3 firstBlockSpawn = new Vector3(-5.6f, 3);
+    public Vector3 lastBlockSpawn = new Vector3(0.4f, -2);
 
     public List<Vector3> possibleSpawns;
 
@@ -82,7 +83,7 @@ public class GameManager : MonoBehaviour
     private void PrepareGameScene()
     {
         SetOperations();
-        generatedEquation = Mathbuds.ExpandedMath.generation(1, operations);
+        generatedEquation = Mathbuds.ExpandedMath.generation(OperationsManager.instance.difficulty, operations);
         fullEquation = getFullEquation(generatedEquation);
         SetPossibleSpawns();
         spawnBlocks(fullEquation.Count, fullEquation);
@@ -134,15 +135,16 @@ public class GameManager : MonoBehaviour
     private void SetPossibleSpawns()
     {
         List<Vector3> spawns= new List<Vector3>();
-        spawns.Add(new Vector3(-5, 3));
-        spawns.Add(new Vector3(-3.5f, 1));
-        spawns.Add(new Vector3(-2, 3));
-        spawns.Add(new Vector3(-0.5f, 1));
-        spawns.Add(new Vector3(1, 3));
-        spawns.Add(new Vector3(2.5f, 1));
-        spawns.Add(new Vector3(4, 3));
-        spawns.Add(new Vector3(5.5f, 1));
-        spawns.Add(new Vector3(7, 3));
+        spawns.Add(new Vector3(-5.6f, 3));
+        spawns.Add(new Vector3(-4.1f, 1));
+        spawns.Add(new Vector3(-2.6f, 3));
+        spawns.Add(new Vector3(-1.1f, 1));
+        spawns.Add(new Vector3(0.4f, 3));
+        spawns.Add(new Vector3(1.9f, 1));
+        spawns.Add(new Vector3(3.4f, 3));
+        spawns.Add(new Vector3(4.9f, 1));
+        spawns.Add(new Vector3(6.4f, 3));
+        spawns.Add(new Vector3(7.9f, 1));
 
         List<Vector3> currentPossibleSpawns = new List<Vector3>();
         for (int i = 0; i < fullEquation.Count; i++)

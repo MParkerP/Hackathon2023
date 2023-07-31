@@ -194,6 +194,22 @@ public class Box : MonoBehaviour
         char character = (char)text[0];
         visibleText.text = blockText;
 
+        //adjust font size for larger numbers
+        if (blockText.Length == 3)
+        {
+            visibleText.fontSize = 0.58f;
+        }
+
+        if (blockText.Length == 4)
+        {
+            visibleText.fontSize = 0.43f;
+        }
+
+        if (blockText.Length == 5)
+        {
+            visibleText.fontSize = 0.34f;
+        }
+
         //if the symbol is not a number make the font bigger and move it up for readability
         if (!char.IsNumber(character))
         {

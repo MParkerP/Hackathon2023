@@ -33,9 +33,7 @@ namespace Mathbuds
         public static int[] generation(int difficulty, List<string> selectedOperators)
         {
             Random random = new Random();
-            difficulty = 3;
             int[] arr = new int[difficulty * 2 + 1];
-            Debug.Log(difficulty);
             bool hasDivision = false;
             //Generate Operands
             for (int i = 0; i < arr.Length; i += 2)

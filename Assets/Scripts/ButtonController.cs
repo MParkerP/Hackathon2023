@@ -26,8 +26,8 @@ public class ButtonController : MonoBehaviour
 
     public void ToggleMusic()
     {
-        AudioManager.IsMusicEnabled = !AudioManager.IsMusicEnabled;
-        if (AudioManager.IsMusicEnabled)
+        AudioManager.instance.IsMusicEnabled = !AudioManager.instance.IsMusicEnabled;
+        if (AudioManager.instance.IsMusicEnabled)
         {
             musicMixer.audioMixer.SetFloat("MusicVolume", 0f);
         }
@@ -42,8 +42,8 @@ public class ButtonController : MonoBehaviour
 
     public void ToggleSoundEffects()
     {
-        AudioManager.IsSoundEnabled = !AudioManager.IsSoundEnabled;
-        if (AudioManager.IsSoundEnabled)
+        AudioManager.instance.IsSoundEnabled = !AudioManager.instance.IsSoundEnabled;
+        if (AudioManager.instance.IsSoundEnabled)
         {
             musicMixer.audioMixer.SetFloat("SoundEffectsVolume", 0f);
         }
