@@ -12,7 +12,6 @@ using JetBrains.Annotations;
 using Random = System.Random;
 using System.Linq;
 using System.Data;
-using Unity.Profiling.Editor;
 using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
@@ -31,10 +30,6 @@ public class GameManager : MonoBehaviour
         instance = this;
         DontDestroyOnLoad(gameObject);
     }
-
-    /*TODO
-     *  art??
-     */
 
     //Members//
 
