@@ -1553,7 +1553,7 @@ MonoBehaviour:
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
   m_Interactable: 1
-  m_TargetGraphic: {fileID: 0}
+  m_TargetGraphic: {fileID: 226048610}
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
@@ -1801,7 +1801,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 167, y: 148}
+  m_AnchoredPosition: {x: 167, y: 65}
   m_SizeDelta: {x: 455.86, y: 195.52}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &444429754
@@ -3151,7 +3151,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 722239398}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 281, y: -405, z: 0}
+  m_LocalPosition: {x: 281, y: -427, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -3839,7 +3839,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 163, y: -161}
+  m_AnchoredPosition: {x: 163, y: -229}
   m_SizeDelta: {x: 587.3998, y: 195.52}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &895003418
@@ -5025,7 +5025,7 @@ MonoBehaviour:
       m_Calls: []
   m_text: "Rooted in Math is a game designed to better the community by focusing
     on the education of the youth by teaching basic arithmetic in a fun and interactive
-    manner. \n\nThis game was designed and programmed by the 2023 WiCS Hackathon
+    manner. \n\nThis game was designed and programmed by the 2023 LSU WiCS Hackathon
     team Top Deck, with members Parker Posey, Myles Crockem, Robert Ferrell, and
     Ronald Gibson."
   m_isRightToLeft: 0
@@ -5602,7 +5602,7 @@ MonoBehaviour:
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
   m_Interactable: 1
-  m_TargetGraphic: {fileID: 0}
+  m_TargetGraphic: {fileID: 1061239698}
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
@@ -5703,7 +5703,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -587.28534, y: -26}
+  m_AnchoredPosition: {x: -587.28534, y: 262}
   m_SizeDelta: {x: 395.3299, y: 90.8353}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1242250434
@@ -5839,7 +5839,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 439.3, y: -134.9}
+  m_AnchoredPosition: {x: 439.3, y: -189}
   m_SizeDelta: {x: 400, y: 400}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1244193486
@@ -7798,7 +7798,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1449977966}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 550, y: -405, z: 0}
+  m_LocalPosition: {x: 550, y: -427, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -8659,7 +8659,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 164, y: -5}
+  m_AnchoredPosition: {x: 164, y: -73}
   m_SizeDelta: {x: 1015.5521, y: 177.1961}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1591175901
@@ -9999,7 +9999,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1993475040}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 10, y: -405, z: 0}
+  m_LocalPosition: {x: 10, y: -427, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -10031,7 +10031,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2022302255}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -259, y: -405, z: 0}
+  m_LocalPosition: {x: -259, y: -427, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -10075,7 +10075,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 419, y: 176}
+  m_AnchoredPosition: {x: 419, y: 101}
   m_SizeDelta: {x: 400, y: 400}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2023536707
